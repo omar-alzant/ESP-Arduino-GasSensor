@@ -28,7 +28,7 @@
 
   <body>
     
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black ">
         <div class="container-fluid">
                  <img  style="width: 30px;" class="rounded mx-auto d-block" src="me.JPG" alt="my photo"> 
            
@@ -41,29 +41,44 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page"  href="https://github.com/omar-alzant/ESP-GasSensor">GitHub</a>
               </li>
+              <li>
+                <a href="https://cors-anywhere.herokuapp.com/corsdemo" class="nav-link active text-danger" aria-current="page" >Active the sheet</a> 
+              </li>
+              <li style="margin-left: 100px;" class="nav-item">
+                <a class="nav-link disactive" aria-current="page"> <strong> Auto reload after : 30s</strong></a>
+              </li>
+              <!-- <li>
+                <h6 style="margin-left: 300px;" id="refresh?" > Refresh every :
+                   <input   type="number" placeholder="Enter nbr" style="width: 177px;">
+                </h6>
+              </li> -->
           </ul>
           </div>
         </div>
       </nav>
 
 
-    <table class="table table-hover"></table>
+    <table class="table table-hover" id="demo"></table>
 <script src="papaparse.min.js">
 </script>
 
+ 
+
+
 <script>
-    function sheet(){
+    
     var url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQWX-yP_2T0Cg5Rml3oVMcyTQtY3ts7EwwfweJxq8kSNhQyHS_KN2GqXIwMKsNnW8Oz3WY1cPeyQR-6/pub?output=csv";
     var table = document.querySelector("table");
 
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function(){
+    
             if (xhr.readyState ==4 && xhr.status ==200)
                 {
                     var data = Papa.parse(xhr.responseText);
                     var contents =  data.data;
-
+                      
                     for (var i in contents )
                     {
                             var row = "<tr>";
@@ -72,6 +87,17 @@
                             row += "<td>"+contents[i][3]+"</td>"
                             row += "</tr>";
                             table.innerHTML += row;
+                            if (contents[i][1] >= 40 )
+                             {
+                              if (contents[i][2]>= 20)
+                                 {
+                                   alert("High Level "+contents[i][2]);
+                                   }
+                                  else 
+                                    {
+                                      alert("High Level " +contents[i][1]);
+                                    }  
+                             }    
 
                     }
                 }
@@ -79,10 +105,27 @@
 
     xhr.open("GET","https://cors-anywhere.herokuapp.com/"+url,true);
     xhr.send();
-};
-setTimeout(sheet(),2000);
+
+    ////////////////////////Refresh the page automaticly  every 30 s //////
+
+  
+///////////////////////////////////////////////////////////////////////
+</script>
+
+<script>
+ 
+    window.setInterval('refresh()',30000); 	
+    // Call a function every 10000 milliseconds 
+    // (OR 10 seconds).
+    
+    // Refresh or reload page.
+    function refresh() {
+        window .location.reload();
+    };
+
 
 </script>
+
 </body>
 
 </html>
